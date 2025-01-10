@@ -5,6 +5,13 @@ import mongoose, { Schema } from "mongoose";
 const costSchema = new Schema({
     description: { type: String, required: true },
     sum: { type: Number, required: true },
+    category: {
+        type: String,
+        enum: ['food', 'health', 'housing', 'sport', 'education'],
+        required: true
+      },
+    date: { type: Date, required: true  },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     });
 
     const CostModel = mongoose.model("Cost", costSchema);
