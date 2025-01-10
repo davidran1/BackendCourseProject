@@ -11,7 +11,7 @@ const costSchema = new Schema({
         required: true
       },
     date: { type: Date, required: true  },
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Number, required: true },
     });
 
     const CostModel = mongoose.model("Cost", costSchema);
