@@ -9,8 +9,6 @@ import { connectDB } from "./utils/db.js";
 //body paresr
 app.use(express.json({ limit: "50mb" }));
 
-//cookie parser
-//app.use(cookieParser());
 
 app.use("/api", costRouter, userRouter);
 const PORT = process.env.PORT || 3000;
@@ -19,6 +17,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+//Abour endpoint
 app.get("/api/about", (req, res) => {
   res.status(200).json({
     success: true,

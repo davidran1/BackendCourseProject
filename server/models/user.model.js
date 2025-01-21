@@ -1,15 +1,13 @@
-//The users collection should hold documents that (at the minimum)
-//  include the following properties: id, first_name, last_name, birthday,
-//  and marital_status.
 import mongoose, { Schema } from "mongoose";
 
+//Define the schema for user collection
 const userSchema = new Schema({
-    id: { type: Number, required: true },
-    first_name: { type: String, required: true },
-    last_name: { type: String, required: true },
-    birthday: { type: Date, required: true },
-    marital_status: { type: String, required: true },
-    });
+  id: { type: Number, required: true },
+  first_name: { type: String, required: true },
+  last_name: { type: String, required: true },
+  birthday: { type: Date, required: true },
+  marital_status: { type: String, required: true },
+});
 
-    const UserModel = mongoose.model("User", userSchema);
-    export default UserModel;
+const UserModel = mongoose.model("User", userSchema);
+export default UserModel;
