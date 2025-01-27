@@ -4,15 +4,13 @@ import UserModel from "../models/user.model.js";
 //This function will add new cost item
 export const addCost = async (req, res) => {
   try {
-    const { description, sum, category, date, user_id } = req.body;
-    const costDate = new Date(date);
+    const { description, sum, category, year, month, day, userid } = req.body;
+    let costDate = new Date(year, month - 1, day);
     if (isNaN(costDate.getTime())) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid date format",
-      });
+      costDate = new Date();
     }
-    const userExist = await UserModel.findOne({ user_id: user_id });
+
+    const userExist = await UserModel.findOne({ userid: userid });
     if (!userExist) {
       return res.status(404).json({
         success: false,
@@ -24,7 +22,7 @@ export const addCost = async (req, res) => {
       sum,
       category,
       date: costDate,
-      user_id,
+      userid,
     });
     await cost.save();
     return res.status(200).json({
@@ -44,7 +42,7 @@ export const addCost = async (req, res) => {
 //This function will return cost report by year and month and specific user
 export const getCostReport = async (req, res) => {
   try {
-    const { user_id, year, month } = req.query;
+    const { id, year, month } = req.query;
 
     // Validate year and month
     if (!year || !month) {
@@ -64,7 +62,7 @@ export const getCostReport = async (req, res) => {
     }
 
     //Validate that the user exist
-    const user = await UserModel.findOne({ user_id:user_id });
+    const user = await UserModel.findOne({ userid: id });
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -77,20 +75,41 @@ export const getCostReport = async (req, res) => {
     const endDate = new Date(year, month, 0);
     // Find costs for the specific user within the date range
     const userCosts = await CostModel.find({
-      use_id: user_id,
+      userid: id,
       date: {
         $gte: startDate,
         $lte: endDate,
       },
     });
 
+    const costsByCategory = {};
+
+    //add all the categories that exist in the db to costsByCategory object
+    userCosts.forEach(cost => {
+      if (!costsByCategory[cost.category]) {
+        costsByCategory[cost.category] = [];
+      }
+
+      costsByCategory[cost.category].push({
+        day: cost.date.getDate(),
+        description: cost.description,
+        sum: cost.sum
+      });
+    });
+
+    const categories = Object.keys(costsByCategory).map(category => ({
+      category: category,
+      items: costsByCategory[category]
+    }));
+    
+
     return res.status(200).json({
       success: true,
       report: {
-        user_id: user_id,
+        userid: id,
         year: parseInt(year),
         month: monthNum,
-        costs: userCosts,
+        categories: categories
       },
     });
   } catch (error) {
