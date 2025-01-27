@@ -33,3 +33,5 @@ app.get("/api/about", (req, res) => {
     },
   });
 });
+
+export default app;
