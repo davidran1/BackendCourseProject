@@ -4,7 +4,7 @@ import CostModel from "../models/cost.model.js";
 //This function will return the total cost for specific user
 export const getUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
     const userExist = await UserModel.findOne({ userid:id });
     if (!userExist) {
       return res.status(404).json({
@@ -13,7 +13,6 @@ export const getUser = async (req, res) => {
       });
     }
     const userCosts = await CostModel.find({ userid: id });
-    console.log(userCosts);
     let totalCost = 0;
     for (let i = 0; i < userCosts.length; i++) {
       totalCost += userCosts[i].sum;
