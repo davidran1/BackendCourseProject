@@ -4,7 +4,7 @@ import UserModel from "../models/user.model.js";
 //This function will add new cost item
 export const addCost = async (req, res) => {
   try {
-    const { description, sum, category, date, user } = req.body;
+    const { description, sum, category, date, user_id } = req.body;
     const costDate = new Date(date);
     if (isNaN(costDate.getTime())) {
       return res.status(400).json({
@@ -12,7 +12,7 @@ export const addCost = async (req, res) => {
         message: "Invalid date format",
       });
     }
-    const userExist = await UserModel.findOne({ id: user });
+    const userExist = await UserModel.findOne({ user_id: user_id });
     if (!userExist) {
       return res.status(404).json({
         success: false,
@@ -24,7 +24,7 @@ export const addCost = async (req, res) => {
       sum,
       category,
       date: costDate,
-      user,
+      user_id,
     });
     await cost.save();
     return res.status(200).json({
@@ -44,7 +44,7 @@ export const addCost = async (req, res) => {
 //This function will return cost report by year and month and specific user
 export const getCostReport = async (req, res) => {
   try {
-    const { id, year, month } = req.query;
+    const { user_id, year, month } = req.query;
 
     // Validate year and month
     if (!year || !month) {
@@ -63,8 +63,8 @@ export const getCostReport = async (req, res) => {
       });
     }
 
-    // Find user
-    const user = await UserModel.findOne({ id });
+    //Validate that the user exist
+    const user = await UserModel.findOne({ user_id:user_id });
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -77,7 +77,7 @@ export const getCostReport = async (req, res) => {
     const endDate = new Date(year, month, 0);
     // Find costs for the specific user within the date range
     const userCosts = await CostModel.find({
-      user: id,
+      use_id: user_id,
       date: {
         $gte: startDate,
         $lte: endDate,
@@ -87,7 +87,7 @@ export const getCostReport = async (req, res) => {
     return res.status(200).json({
       success: true,
       report: {
-        user: id,
+        user_id: user_id,
         year: parseInt(year),
         month: monthNum,
         costs: userCosts,

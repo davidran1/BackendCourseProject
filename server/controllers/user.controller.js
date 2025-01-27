@@ -5,14 +5,14 @@ import CostModel from "../models/cost.model.js";
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const userExist = await UserModel.findOne({ id });
+    const userExist = await UserModel.findOne({ user_id:id });
     if (!userExist) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    const userCosts = await CostModel.find({ user: id });
+    const userCosts = await CostModel.find({ user_id: id });
     console.log(userCosts);
     let totalCost = 0;
     for (let i = 0; i < userCosts.length; i++) {
@@ -36,7 +36,7 @@ export const getUser = async (req, res) => {
 //This function will add new user to DB
 export const addUser = async (req, res) => {
   try {
-    const { id, first_name, last_name, birthday, marital_status } = req.body;
+    const { user_id, first_name, last_name, birthday, marital_status } = req.body;
     const userBirthday = new Date(birthday);
     if (isNaN(userBirthday.getTime())) {
       return res.status(400).json({
@@ -44,17 +44,17 @@ export const addUser = async (req, res) => {
         message: "Invalid date format",
       });
     }
+    const findUser = await UserModel.findOne({ id });
+    if (findUser) {
+      return res.status(400).send("User already exists");
+    }
     const user = new UserModel({
-      id,
+      user_id,
       first_name,
       last_name,
       birthday: userBirthday,
       marital_status,
     });
-    const findUser = await UserModel.findOne({ id });
-    if (findUser) {
-      return res.status(400).send("User already exists");
-    }
     await user.save();
     return res.status(200).json({
       success: true,
