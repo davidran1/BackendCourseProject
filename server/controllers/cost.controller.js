@@ -10,7 +10,7 @@ export const addCost = async (req, res) => {
       costDate = new Date();
     }
 
-    const userExist = await UserModel.findOne({ userid: userid });
+    const userExist = await UserModel.findOne({ id: userid });
     if (!userExist) {
       return res.status(404).json({
         success: false,
@@ -62,7 +62,7 @@ export const getCostReport = async (req, res) => {
     }
 
     //Validate that the user exist
-    const user = await UserModel.findOne({ userid: id });
+    const user = await UserModel.findOne({ id: id });
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -82,35 +82,39 @@ export const getCostReport = async (req, res) => {
       },
     });
 
-    const costsByCategory = {};
+    //Option one - object of elements
+    const costsByCategory = {"food":[], "health":[], "housing":[], "sport":[], "education":[]};
 
     //add all the categories that exist in the db to costsByCategory object
     userCosts.forEach(cost => {
-      if (!costsByCategory[cost.category]) {
-        costsByCategory[cost.category] = [];
-      }
-
-      costsByCategory[cost.category].push({
+       costsByCategory[cost.category].push({
         day: cost.date.getDate(),
         description: cost.description,
         sum: cost.sum
       });
-    });
+    });    
 
-    const categories = Object.keys(costsByCategory).map(category => ({
-      category: category,
-      items: costsByCategory[category]
-    }));
-    
+    //Option two - array of elements
+    /*
+    const costsByCategory = [{ food: [] },{ health: [] },{ housing: [] },{ sport: [] },{ education: [] }];
+
+userCosts.forEach(cost => {
+    const categoryObject = costsByCategory.find(obj => obj.hasOwnProperty(cost.category));
+    if (categoryObject) {
+        categoryObject[cost.category].push({
+            day: cost.date.getDate(),
+            description: cost.description,
+            sum: cost.sum
+        });
+    }
+    */
 
     return res.status(200).json({
       success: true,
-      report: {
         userid: id,
         year: parseInt(year),
         month: monthNum,
-        categories: categories
-      },
+        costs: costsByCategory
     });
   } catch (error) {
     return res.status(500).json({

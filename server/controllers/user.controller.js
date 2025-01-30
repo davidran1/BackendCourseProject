@@ -5,14 +5,14 @@ import CostModel from "../models/cost.model.js";
 export const getUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const userExist = await UserModel.findOne({ userid:id });
+    const userExist = await UserModel.findOne({ id:id });
     if (!userExist) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-    const userCosts = await CostModel.find({ userid: id });
+    const userCosts = await CostModel.find({ id: id });
     let totalCost = 0;
     for (let i = 0; i < userCosts.length; i++) {
       totalCost += userCosts[i].sum;
@@ -35,7 +35,7 @@ export const getUser = async (req, res) => {
 //This function will add new user to DB
 export const addUser = async (req, res) => {
   try {
-    const { userid, first_name, last_name, birthday, marital_status } = req.body;
+    const { id, first_name, last_name, birthday, marital_status } = req.body;
     const userBirthday = new Date(birthday);
     if (isNaN(userBirthday.getTime())) {
       return res.status(400).json({
@@ -43,12 +43,12 @@ export const addUser = async (req, res) => {
         message: "Invalid date format",
       });
     }
-    const findUser = await UserModel.findOne({ userid: userid });
+    const findUser = await UserModel.findOne({ id: id });
     if (findUser) {
       return res.status(400).send("User already exists");
     }
     const user = new UserModel({
-      userid,
+      id,
       first_name,
       last_name,
       birthday: userBirthday,
