@@ -1,0 +1,35 @@
+http://localhost:4000
+
+testing getting the about
+-------------------------
+url=http://localhost:4000/api/about/
+data.status_code=200
+b'{"success":true,"team_members":{"member1":{"first_name":"david","last_name":"azran"},"member2":{"first_name":"ofir","last_name":"harar"}}}'
+data.text={"success":true,"team_members":{"member1":{"first_name":"david","last_name":"azran"},"member2":{"first_name":"ofir","last_name":"harar"}}}
+{'success': True, 'team_members': {'member1': {'first_name': 'david', 'last_name': 'azran'}, 'member2': {'first_name': 'ofir', 'last_name': 'harar'}}}
+
+
+testing getting the report - 1
+------------------------------
+url=http://localhost:4000/api/report/?id=123123&year=2025&month=1
+data.status_code=200
+b'{"success":true,"userid":"123123","year":2025,"month":1,"costs":{"food":[],"health":[],"housing":[],"sport":[],"education":[]}}'
+data.text={"success":true,"userid":"123123","year":2025,"month":1,"costs":{"food":[],"health":[],"housing":[],"sport":[],"education":[]}}
+
+
+
+testing adding cost item
+----------------------------------
+url=http://localhost:4000/api/add/
+data.status_code=200
+b'{"success":true,"message":"Cost added successfully","cost":{"description":"milk 9","sum":8,"category":"food","date":"2025-01-31T11:28:48.069Z","userid":123123,"_id":"679cb3f0e39e1526e3be12f8","__v":0}}'
+
+
+testing getting the report - 2
+------------------------------
+url=http://localhost:4000/api/report/?id=123123&year=2025&month=1
+data.status_code=200
+b'{"success":true,"userid":"123123","year":2025,"month":1,"costs":{"food":[{"day":31,"description":"milk 9","sum":8}],"health":[],"housing":[],"sport":[],"education":[]}}'
+data.text={"success":true,"userid":"123123","year":2025,"month":1,"costs":{"food":[{"day":31,"description":"milk 9","sum":8}],"health":[],"housing":[],"sport":[],"education":[]}}
+
+

@@ -71,8 +71,10 @@ export const getCostReport = async (req, res) => {
     }
 
     // Calculate start and end dates for the month
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0);
+    const startDate = new Date(Date.UTC(year, month-1, 1, 0, 0, 0));  //First day of the month at 00:00:00
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59)); // Last day of the month at 23:59:59
+    console.log(startDate);
+    console.log(endDate);
     // Find costs for the specific user within the date range
     const userCosts = await CostModel.find({
       userid: id,
