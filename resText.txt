@@ -4,9 +4,9 @@ testing getting the about
 -------------------------
 url=http://localhost:4000/api/about/
 data.status_code=200
-b'{"success":true,"team_members":{"member1":{"first_name":"david","last_name":"azran"},"member2":{"first_name":"ofir","last_name":"harar"}}}'
-data.text={"success":true,"team_members":{"member1":{"first_name":"david","last_name":"azran"},"member2":{"first_name":"ofir","last_name":"harar"}}}
-{'success': True, 'team_members': {'member1': {'first_name': 'david', 'last_name': 'azran'}, 'member2': {'first_name': 'ofir', 'last_name': 'harar'}}}
+b'[{"first_name":"David","last_name":"Azran"},{"first_name":"Ofir","last_name":"Harar"}]'
+data.text=[{"first_name":"David","last_name":"Azran"},{"first_name":"Ofir","last_name":"Harar"}]
+[{'first_name': 'David', 'last_name': 'Azran'}, {'first_name': 'Ofir', 'last_name': 'Harar'}]
 
 
 testing getting the report - 1
@@ -22,7 +22,7 @@ testing adding cost item
 ----------------------------------
 url=http://localhost:4000/api/add/
 data.status_code=200
-b'{"success":true,"message":"Cost added successfully","cost":{"description":"milk 9","sum":8,"category":"food","date":"2025-02-02T07:40:53.906Z","userid":123123,"_id":"679f2186d5f9b1134898cb23","__v":0}}'
+b'{"success":true,"message":"Cost added successfully","cost":{"description":"milk 9","sum":8,"category":"food","date":"2025-02-02T19:49:18.443Z","userid":123123,"_id":"679fcc3ee431d15367f4deba","__v":0}}'
 
 
 testing getting the report - 2

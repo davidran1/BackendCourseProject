@@ -36,7 +36,5 @@ app.listen(PORT, () => {
 * Endpoint providing team member information
 */
 app.get("/api/about", (req, res) => {
- res.status(200).json({success: true,team_members: {
-     member1: {first_name: "david",last_name: "azran"},
-     member2: {first_name: "ofir",last_name: "harar",},},});
-    });
+ res.status(200).json([{first_name: "David", last_name: "Azran"},{first_name: "Ofir", last_name: "Harar"}]);
+});
